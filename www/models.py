@@ -5,7 +5,7 @@ __author__='LiangZheng'
 
 import time, uuid
 
-from orm import Model, StringField, FloatField, TextField
+from orm import Model, StringField, FloatField, TextField, BooleanField
 
 def next_id():
 	return '%015d%s000' % (int(time.time()*1000), uuid.uuid4().hex)
