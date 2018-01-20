@@ -1,0 +1,70 @@
+{% extends '__base__.html' %}
+
+{% block title %}日志{% endblock %}
+
+{% block beforehead %}
+
+
+
+{% endblock %}
+
+{% block content %}
+
+    <div id="main" style="width: 1200px;height:1000px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var dom = document.getElementById("main");
+        var myChart = echarts.init(dom);
+        $.getJSON('/static/data-gl//flights.json', function(data) {
+
+            function getAirportCoord(idx) {
+                return [data.airports[idx][3], data.airports[idx][4]];
+            }
+            var routes = data.routes.map(function(airline) {
+                return [
+                    getAirportCoord(airline[1]),
+                    getAirportCoord(airline[2])
+                ];
+            });
+
+            myChart.setOption({
+                backgroundColor: '#000',
+                globe: {
+                    baseTexture: '/static/data-gl/world.topo.bathy.200401.jpg',
+                    heightTexture: '/static/data-gl/bathymetry_bw_composite_4k.jpg',
+
+                    shading: 'lambert',
+
+                    light: {
+                        ambient: {
+                            intensity: 0.4
+                        },
+                        main: {
+                            intensity: 0.4
+                        }
+                    },
+
+                    viewControl: {
+                        autoRotate: false
+                    }
+                },
+                series: {
+
+                    type: 'lines3D',
+
+                    coordinateSystem: 'globe',
+
+                    blendMode: 'lighter',
+
+                    lineStyle: {
+                        width: 1,
+                        color: 'rgb(50, 50, 150)',
+                        opacity: 0.1
+                    },
+
+                    data: routes
+                }
+            });
+        });
+    </script>
+{% endblock %}
